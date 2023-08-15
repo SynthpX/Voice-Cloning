@@ -25,13 +25,10 @@ RUN pip3 install torch torchvision torchaudio --extra-index-url https://download
 RUN mkdir $HOME/ai-voice-cloning
 WORKDIR $HOME/ai-voice-cloning
 COPY --chown=user:user modules modules
+COPY setup-cuda.sh ./setup-cuda.sh
+RUN chmod +x setup-cuda.sh && ./setup-cuda.sh
 
-RUN python3 -m pip install -r ./modules/tortoise-tts/requirements.txt
-RUN python3 -m pip install -e ./modules/tortoise-tts/
-RUN python3 -m pip install -r ./modules/dlas/requirements.txt
-RUN python3 -m pip install -e ./modules/dlas/
-ADD requirements.txt requirements.txt
-RUN python3 -m pip install -r ./requirements.txt
+COPY start.sh ./start.sh
+CMD ["./start.sh"]
+
 ADD --chown=user:user . $HOME/ai-voice-cloning
-
-CMD ["python", "./src/main.py", "--listen", "0.0.0.0:7680"]
